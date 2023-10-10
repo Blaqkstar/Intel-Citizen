@@ -36,7 +36,7 @@ class Program
 
             if (response.IsSuccessStatusCode)
             {
-                Console.Write("Searching");
+                Console.Write("Fetching data");
                 for (int x = 0; x < 6; x++)
                 {
                     await Task.Delay(333);
@@ -69,7 +69,36 @@ class Program
                 }
 
                 // prints player name
-                Console.WriteLine($"Player Name: {playerName}");
+                Console.WriteLine($"PLAYER NAME: {playerName}");
+
+                // finds enlisted date
+                i = 0;
+                string enlistedDate = null;
+                while (i < 25 && enlistedDate == null)
+                {
+                    string xpath = $"//div[@class='left-col']//div[@class='inner']//p[@class='entry']//strong[@class='value']";
+                    var node = doc.DocumentNode.SelectSingleNode(xpath);
+                    if (node != null)
+                    {
+                        enlistedDate = node.InnerText;
+                    }
+                    i++;
+                }
+
+                //if (enlistedDate == null)
+                //{
+                //    Console.WriteLine("Unable to retrieve enlisted date.");
+                //}
+
+                // prints enlisted date
+                if (enlistedDate == null)
+                {
+                    Console.WriteLine($"ENLISTED: N/A");
+                }
+                else
+                {
+                    Console.WriteLine($"ENLISTED: {enlistedDate}");
+                }
 
                 // finds org name
                 i = 0;
@@ -94,40 +123,11 @@ class Program
                 // prints org name
                 if (orgName == null)
                 {
-                    Console.WriteLine($"Organization: N/A");
+                    Console.WriteLine($"ORG: N/A");
                 }
                 else
                 {
-                    Console.WriteLine($"Organization: {orgName}");
-                }
-
-                // finds enlisted date
-                i = 0;
-                string enlistedDate = null;
-                while (i < 25 && enlistedDate == null)
-                {
-                    string xpath = $"//div[@class='left-col']//div[@class='inner']//p[@class='entry']//strong[@class='value']";
-                    var node = doc.DocumentNode.SelectSingleNode(xpath);
-                    if (node != null)
-                    {
-                        enlistedDate = node.InnerText;
-                    }
-                    i++;
-                }
-
-                //if (enlistedDate == null)
-                //{
-                //    Console.WriteLine("Unable to retrieve enlisted date.");
-                //}
-
-                // prints enlisted date
-                if (enlistedDate == null)
-                {
-                    Console.WriteLine($"Enlisted: N/A");
-                }
-                else
-                {
-                    Console.WriteLine($"Enlisted: {enlistedDate}");
+                    Console.WriteLine($"ORG: {orgName}");
                 }
                 
 
@@ -141,6 +141,7 @@ class Program
                     if (node != null)
                     {
                         playerBio = node.InnerText;
+                        playerBio = playerBio.Trim();
                     }
                     i++;
                 }
@@ -151,16 +152,21 @@ class Program
                 //}
 
                 // prints URL to player profile
-                Console.WriteLine($"Profile URL: {url}");
+                Console.WriteLine($"PROFILE URL: {url}");
 
                 // prints player bio
                 if (playerBio == null)
                 {
-                    Console.WriteLine($"Player Bio: N/A");
+                    Console.WriteLine($"PLAYER BIO: N/A");
                 }
                 else
                 {
-                    Console.WriteLine($"Player Bio: {playerBio}");
+                    Console.WriteLine();
+                    Console.WriteLine($"PLAYER BIO:");
+                    Console.WriteLine(playerBio);
+                    Console.WriteLine();
+                    Console.WriteLine("--------------------------");
+                    Console.WriteLine();
                 }
             }
             else
@@ -193,4 +199,5 @@ class Program
             Thread.Sleep(333); // Wait for half a second
         }
     }
+
 }
