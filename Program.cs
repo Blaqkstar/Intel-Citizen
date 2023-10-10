@@ -70,6 +70,8 @@ class Program
 
                 // prints player name
                 Console.WriteLine($"Player Name: {playerName}");
+                // prints URL to player profile
+                Console.WriteLine($"Profile URL: {url}");
 
                 // finds org name
                 i = 0;
@@ -85,10 +87,10 @@ class Program
                     i++;
                 }
 
-                if (orgName == null)
-                {
-                    Console.WriteLine("Unable to retrieve organization name.");
-                }
+                //if (orgName == null)
+                //{
+                //    Console.WriteLine("Unable to retrieve organization name.");
+                //}
 
                 // prints org name
                 if (orgName == null)
@@ -114,10 +116,10 @@ class Program
                     i++;
                 }
 
-                if (enlistedDate == null)
-                {
-                    Console.WriteLine("Unable to retrieve enlisted date.");
-                }
+                //if (enlistedDate == null)
+                //{
+                //    Console.WriteLine("Unable to retrieve enlisted date.");
+                //}
 
                 // prints enlisted date
                 if (enlistedDate == null)
@@ -144,10 +146,10 @@ class Program
                     i++;
                 }
 
-                if (playerBio == null)
-                {
-                    Console.WriteLine("Unable to retrieve player bio.");
-                }
+                //if (playerBio == null)
+                //{
+                //    Console.WriteLine("Unable to retrieve player bio.");
+                //}
 
                 // prints player bio
                 if (playerBio == null)
@@ -161,7 +163,7 @@ class Program
             }
             else
             {
-                Console.WriteLine("Unable to retrieve player information.");
+                Console.WriteLine("Player not found.");
             }
             Console.WriteLine();
         }
