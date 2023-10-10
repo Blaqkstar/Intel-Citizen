@@ -70,8 +70,6 @@ class Program
 
                 // prints player name
                 Console.WriteLine($"Player Name: {playerName}");
-                // prints URL to player profile
-                Console.WriteLine($"Profile URL: {url}");
 
                 // finds org name
                 i = 0;
@@ -85,6 +83,7 @@ class Program
                         orgName = node.InnerText;
                     }
                     i++;
+                    //Console.WriteLine(i);
                 }
 
                 //if (orgName == null)
@@ -150,6 +149,9 @@ class Program
                 //{
                 //    Console.WriteLine("Unable to retrieve player bio.");
                 //}
+
+                // prints URL to player profile
+                Console.WriteLine($"Profile URL: {url}");
 
                 // prints player bio
                 if (playerBio == null)
