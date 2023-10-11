@@ -27,27 +27,18 @@ class Program
             // debug mode toggle
             if (username == "!debug")
             {
-                debugMode = !debugMode;
-
-                if (debugMode == true)
-                {
-                    Console.WriteLine("Debug Mode enabled. Use !debug again to disable.");
-                    Console.WriteLine();
-                }
-                else
-                {
-                    Console.WriteLine("Debug Mode disabled.");
-                    Console.WriteLine();
-                }
+                ToggleDebug(debugMode);
             }
 
-            if (username != "!debug")
+            if (username != "!debug" && username != "!help" && username != "!?")
             {
                 string url = $"https://robertsspaceindustries.com/citizens/{username}";
                 GetPlayerInfo(url, debugMode).Wait();
             }            
         }
     }
+
+    
 
     static async Task GetPlayerInfo(string url, bool debugMode)
     {
@@ -206,6 +197,22 @@ class Program
             Console.WriteLine($"An error occurred: {ex.Message}");
             Console.WriteLine();
             Console.WriteLine("--------------------------");
+            Console.WriteLine();
+        }
+    }
+
+    private static void ToggleDebug(bool debugMode)
+    {
+        debugMode = !debugMode;
+
+        if (debugMode == true)
+        {
+            Console.WriteLine("Debug Mode enabled. Use !debug again to disable.");
+            Console.WriteLine();
+        }
+        else
+        {
+            Console.WriteLine("Debug Mode disabled.");
             Console.WriteLine();
         }
     }
