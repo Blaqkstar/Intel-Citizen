@@ -15,29 +15,30 @@ class Program
 
         while (true)
         {
-            Console.Write("ENTER PLAYER NAME (or '!exit' to quit): ");
+            Console.Write("ENTER PLAYER NAME (or '/exit' to quit): ");
             string username = Console.ReadLine();
 
             // exit cmd
-            if (username.ToLower() == "!exit")
+            if (username.ToLower() == "/exit")
             {
                 Environment.Exit(0);
             }
 
             // debug mode toggle
-            if (username == "!debug")
+            if (username == "/debug")
             {
+                debugMode = !debugMode;
                 ToggleDebug(debugMode);
             }
 
             // help dialog
-            if (username == "!help" || username == "!?")
+            if (username == "/help" || username == "/?")
             {
                 PrintHelpInfo();
             }
 
             // processes query
-            if (username != "!debug" && username != "!help" && username != "!?")
+            if (username != "/debug" && username != "/help" && username != "/?")
             {
                 string url = $"https://robertsspaceindustries.com/citizens/{username}";
                 GetPlayerInfo(url, debugMode).Wait();
@@ -208,16 +209,19 @@ class Program
 
     private static void ToggleDebug(bool debugMode)
     {
-        debugMode = !debugMode;
-
+        
         if (debugMode == true)
         {
             Console.WriteLine("Debug Mode enabled. Use !debug again to disable.");
+            Console.WriteLine();
+            Console.WriteLine("--------------------------");
             Console.WriteLine();
         }
         else
         {
             Console.WriteLine("Debug Mode disabled.");
+            Console.WriteLine();
+            Console.WriteLine("--------------------------");
             Console.WriteLine();
         }
     }
