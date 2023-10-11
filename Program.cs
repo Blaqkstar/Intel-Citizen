@@ -172,12 +172,18 @@ class Program
             else
             {
                 Console.WriteLine("Player not found.");
+                Console.WriteLine();
+                Console.WriteLine("--------------------------");
+                Console.WriteLine();
             }
             Console.WriteLine();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
+            Console.WriteLine();
+            Console.WriteLine("--------------------------");
+            Console.WriteLine();
         }
     }
 
