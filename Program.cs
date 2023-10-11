@@ -16,18 +16,41 @@ class Program
             Console.Write("ENTER PLAYER NAME (or '!exit' to quit): ");
             string username = Console.ReadLine();
 
+            // exit cmd
             if (username.ToLower() == "!exit")
             {
                 break;
             }
 
+            // debug mode toggle
+            bool debugMode = false;
+            if (username.ToLower() == "!debug")
+            {
+                debugMode = !debugMode;
+                if (debugMode == true)
+                {
+                    Console.WriteLine("Debug Mode enabled. Use !debug again to disable.");
+                    Console.WriteLine();
+                    Console.Write("ENTER PLAYER NAME (or '!exit' to quit): ");
+                    username = Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("Debug Mode disabled.");
+                    Console.WriteLine();
+                    Console.Write("ENTER PLAYER NAME (or '!exit' to quit): ");
+                    username = Console.ReadLine();
+                }
+                
+            }
+
             string url = $"https://robertsspaceindustries.com/citizens/{username}";
 
-            GetPlayerInfo(url).Wait();
+            GetPlayerInfo(url, debugMode).Wait();
         }
     }
 
-    static async Task GetPlayerInfo(string url)
+    static async Task GetPlayerInfo(string url, bool debugMode)
     {
         try
         {
@@ -63,9 +86,9 @@ class Program
                     i++;
                 }
 
-                if (playerName == null)
+                if (playerName == null && debugMode == true)
                 {
-                    Console.WriteLine("Unable to retrieve player name.");
+                    Console.WriteLine("DEBUG CONSOLE: Unable to retrieve player name.");
                 }
 
                 // prints player name
@@ -85,10 +108,11 @@ class Program
                     i++;
                 }
 
-                //if (enlistedDate == null)
-                //{
-                //    Console.WriteLine("Unable to retrieve enlisted date.");
-                //}
+                // debugMode output
+                if (enlistedDate == null && debugMode == true)
+                {
+                    Console.WriteLine("DEBUG CONSOLE: Unable to retrieve enlisted date.");
+                }
 
                 // prints enlisted date
                 if (enlistedDate == null)
@@ -115,10 +139,10 @@ class Program
                     //Console.WriteLine(i);
                 }
 
-                //if (orgName == null)
-                //{
-                //    Console.WriteLine("Unable to retrieve organization name.");
-                //}
+                if (orgName == null && debugMode == true)
+                {
+                    Console.WriteLine("DEBUG CONSOLE: Unable to retrieve organization name.");
+                }
 
                 // prints org name
                 if (orgName == null)
@@ -146,10 +170,10 @@ class Program
                     i++;
                 }
 
-                //if (playerBio == null)
-                //{
-                //    Console.WriteLine("Unable to retrieve player bio.");
-                //}
+                if (playerBio == null && debugMode == true)
+                {
+                    Console.WriteLine("DEBUG CONSOLE: Unable to retrieve player bio.");
+                }
 
                 // prints URL to player profile
                 Console.WriteLine($"PROFILE URL: {url}");
@@ -202,7 +226,7 @@ class Program
         foreach (string line in asciiArt)
         {
             Console.WriteLine(line);
-            Thread.Sleep(333); // Wait for half a second
+            Thread.Sleep(200); // Wait for half a second
         }
     }
 
