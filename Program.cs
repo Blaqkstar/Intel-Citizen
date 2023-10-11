@@ -8,6 +8,8 @@ class Program
 {
     static void Main()
     {
+        bool debugMode = false;
+
         PrintTitle();
         Console.WriteLine();
 
@@ -19,34 +21,31 @@ class Program
             // exit cmd
             if (username.ToLower() == "!exit")
             {
-                break;
+                Environment.Exit(0);
             }
 
             // debug mode toggle
-            bool debugMode = false;
-            if (username.ToLower() == "!debug")
+            if (username == "!debug")
             {
                 debugMode = !debugMode;
+
                 if (debugMode == true)
                 {
                     Console.WriteLine("Debug Mode enabled. Use !debug again to disable.");
                     Console.WriteLine();
-                    Console.Write("ENTER PLAYER NAME (or '!exit' to quit): ");
-                    username = Console.ReadLine();
                 }
                 else
                 {
                     Console.WriteLine("Debug Mode disabled.");
                     Console.WriteLine();
-                    Console.Write("ENTER PLAYER NAME (or '!exit' to quit): ");
-                    username = Console.ReadLine();
                 }
-                
             }
 
-            string url = $"https://robertsspaceindustries.com/citizens/{username}";
-
-            GetPlayerInfo(url, debugMode).Wait();
+            if (username != "!debug")
+            {
+                string url = $"https://robertsspaceindustries.com/citizens/{username}";
+                GetPlayerInfo(url, debugMode).Wait();
+            }            
         }
     }
 
