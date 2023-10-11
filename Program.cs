@@ -30,15 +30,20 @@ class Program
                 ToggleDebug(debugMode);
             }
 
+            // help dialog
+            if (username == "!help" || username == "!?")
+            {
+                PrintHelpInfo();
+            }
+
+            // processes query
             if (username != "!debug" && username != "!help" && username != "!?")
             {
                 string url = $"https://robertsspaceindustries.com/citizens/{username}";
                 GetPlayerInfo(url, debugMode).Wait();
-            }            
+            }
         }
     }
-
-    
 
     static async Task GetPlayerInfo(string url, bool debugMode)
     {
@@ -215,6 +220,19 @@ class Program
             Console.WriteLine("Debug Mode disabled.");
             Console.WriteLine();
         }
+    }
+    private static void PrintHelpInfo()
+    {
+        Console.WriteLine();
+        Console.WriteLine("AVAILABLE COMMANDS:");
+        Console.WriteLine("--------------------------");
+        Console.WriteLine();
+        Console.WriteLine("INSERT COMMAND & DESCRIPTION HERE");
+        Console.WriteLine("INSERT COMMAND & DESCRIPTION HERE");
+        Console.WriteLine("INSERT COMMAND & DESCRIPTION HERE");
+        Console.WriteLine();
+        Console.WriteLine("--------------------------");
+        Console.WriteLine();
     }
 
     static void PrintTitle()
