@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml;
@@ -35,6 +36,11 @@ class Program
             if (username == "/help" || username == "/?")
             {
                 PrintHelpInfo();
+            }
+
+            if (username == "/donate")
+            {
+                LaunchDonatePage();
             }
 
             // processes query
@@ -231,14 +237,18 @@ class Program
         Console.WriteLine("AVAILABLE COMMANDS:");
         Console.WriteLine("--------------------------");
         Console.WriteLine();
-        Console.WriteLine("INSERT COMMAND & DESCRIPTION HERE");
-        Console.WriteLine("INSERT COMMAND & DESCRIPTION HERE");
-        Console.WriteLine("INSERT COMMAND & DESCRIPTION HERE");
+        Console.WriteLine("/exit - closes Intel-Citizen");
+        Console.WriteLine("/about - build info");
+        Console.WriteLine("/donate - buy me a coffee :)");
         Console.WriteLine();
         Console.WriteLine("--------------------------");
         Console.WriteLine();
     }
-
+    private static void LaunchDonatePage()
+    {
+        // STILL NEED TO SET UP DONATION PAGE
+        System.Diagnostics.Process.Start("explorer.exe", "http://google.com");
+    }
     static void PrintTitle()
     {
         string[] asciiArt = new string[]
