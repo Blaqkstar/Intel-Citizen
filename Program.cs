@@ -1,5 +1,6 @@
 ﻿using HtmlAgilityPack;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,39 +17,44 @@ class Program
 
         while (true)
         {
-            Console.Write("ENTER PLAYER NAME (or '/exit' to quit): ");
+            Console.Write("ENTER PLAYER NAME (or '/help' for help): ");
             string username = Console.ReadLine();
 
-            // exit cmd
-            if (username.ToLower() == "/exit")
-            {
-                Environment.Exit(0);
-            }
+            GetUserInput(username, debugMode);
+        }
+    }
 
-            // debug mode toggle
-            if (username == "/debug")
-            {
-                debugMode = !debugMode;
-                ToggleDebug(debugMode);
-            }
+    private static void GetUserInput(string username, bool debugMode)
+    {
+        // exit cmd
+        if (username.ToLower() == "/exit")
+        {
+            Environment.Exit(0);
+        }
 
-            // help dialog
-            if (username == "/help" || username == "/?")
-            {
-                PrintHelpInfo();
-            }
+        // debug mode toggle
+        if (username == "/debug")
+        {
+            debugMode = !debugMode;
+            ToggleDebug(debugMode);
+        }
 
-            if (username == "/donate")
-            {
-                LaunchDonatePage();
-            }
+        // help dialog
+        if (username == "/help" || username == "/?")
+        {
+            PrintHelpInfo();
+        }
 
-            // processes query
-            if (username != "/debug" && username != "/help" && username != "/?")
-            {
-                string url = $"https://robertsspaceindustries.com/citizens/{username}";
-                GetPlayerInfo(url, debugMode).Wait();
-            }
+        if (username == "/donate")
+        {
+            LaunchDonatePage();
+        }
+
+        // processes query
+        if (username != "/debug" && username != "/help" && username != "/?" && username != "/donate" && username != "/about")
+        {
+            string url = $"https://robertsspaceindustries.com/citizens/{username}";
+            GetPlayerInfo(url, debugMode).Wait();
         }
     }
 
@@ -64,7 +70,7 @@ class Program
                 Console.Write("Fetching data");
                 for (int x = 0; x < 6; x++)
                 {
-                    await Task.Delay(333);
+                    await Task.Delay(200);
                     Console.Write(".");
                 }
                 Console.WriteLine();
@@ -184,6 +190,9 @@ class Program
                 if (playerBio == null)
                 {
                     Console.WriteLine($"PLAYER BIO: N/A");
+                    Console.WriteLine();
+                    Console.WriteLine("--------------------------");
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -251,21 +260,36 @@ class Program
     }
     static void PrintTitle()
     {
+        string ver = "v0.1.05";
         string[] asciiArt = new string[]
         {
             "  _____       _       _         ___ _ _   _               ",
             "  \\_   \\_ __ | |_ ___| |       / __(_) |_(_)_______ _ __  ",
             "   / /\\/ '_ \\| __/ _ \\ |_____ / /  | | __| |_  / _ \\ '_ \\ ",
             "/\\/ /_ | | | | ||  __/ |_____/ /___| | |_| |/ /  __/ | | |",
-            "\\____/ |_| |_|\\__\\___|_|     \\____/|_|\\__|_/___\\___|_| |_|",
+            $"\\____/ |_| |_|\\__\\___|_|     \\____/|_|\\__|_/___\\___|_| |_|{ver}",
             "                                      (C)Blaqkstar 2023"
         };
+        string underline = "==================================================================";
 
+        foreach (char c in underline)
+        {
+            Console.Write(c);
+            Thread.Sleep(1);
+        }
+        Console.WriteLine();
         foreach (string line in asciiArt)
         {
             Console.WriteLine(line);
-            Thread.Sleep(200); // Wait for half a second
+            Thread.Sleep(200); // Wait for 200ms
         }
+        foreach (char c in underline)
+        {
+            Console.Write(c);
+            Thread.Sleep(1);
+        }
+        Console.WriteLine();
+
     }
 
 }
