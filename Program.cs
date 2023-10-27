@@ -45,6 +45,17 @@ class Program
             PrintHelpInfo();
         }
 
+        // about cmd
+        if (username == "/about")
+        {
+            Console.WriteLine();
+            Console.WriteLine("********************************");
+            PrintAboutInfo();
+            Console.WriteLine();
+            Console.WriteLine("********************************");
+            Console.WriteLine();
+        }
+
         if (username == "/donate")
         {
             LaunchDonatePage();
@@ -131,6 +142,7 @@ class Program
                 {
                     Console.WriteLine($"ENLISTED: {enlistedDate}");
                 }
+                Console.WriteLine();
 
                 // finds org name
                 i = 0;
@@ -161,7 +173,38 @@ class Program
                 {
                     Console.WriteLine($"ORG: {orgName}");
                 }
-                
+
+                // finds org URL
+                i = 0;
+                string orgURL = null;
+                while (i < 25 && orgURL == null)
+                {
+                    //string xpath = $"//div[@class='main-org right-col visibility-V']//div[@class='info']//p[@class='entry']//a[@class='value data{i}']";
+                    string xpath = $"//div[@class='main-org right-col visibility-V']//div[@class='info']//p[@class='entry']//a/@href";
+                    var node = doc.DocumentNode.SelectSingleNode(xpath);
+                    if (node != null)
+                    {
+                        orgURL = node.GetAttributeValue("href", string.Empty);
+                    }
+                    i++;
+                    //Console.WriteLine(i);
+                }
+
+                if (orgURL == null && debugMode == true)
+                {
+                    Console.WriteLine("DEBUG CONSOLE: Unable to retrieve organization name.");
+                }
+
+                // prints org URL
+                if (orgURL == null)
+                {
+                    Console.WriteLine($"ORG URL: N/A");
+                }
+                else
+                {
+                    Console.WriteLine($"ORG URL: http://www.robertsspaceindustries.com{orgURL}");
+                }
+                Console.WriteLine();
 
                 // finds player bio
                 i = 0;
@@ -227,7 +270,7 @@ class Program
         
         if (debugMode == true)
         {
-            Console.WriteLine("Debug Mode enabled. Use !debug again to disable.");
+            Console.WriteLine("Debug Mode enabled. Use /debug again to disable.");
             Console.WriteLine();
             Console.WriteLine("--------------------------");
             Console.WriteLine();
@@ -246,21 +289,42 @@ class Program
         Console.WriteLine("AVAILABLE COMMANDS:");
         Console.WriteLine("--------------------------");
         Console.WriteLine();
-        Console.WriteLine("/exit - closes Intel-Citizen");
+        //Console.WriteLine("/org - pulls up org webpage of last-searched player");
         Console.WriteLine("/about - build info");
         Console.WriteLine("/donate - buy me a coffee :)");
+        Console.WriteLine("/exit - closes Intel-Citizen");
         Console.WriteLine();
         Console.WriteLine("--------------------------");
         Console.WriteLine();
     }
+
+    private static void PrintAboutInfo()
+    {
+        string ver = "v0.1.06";
+        Console.WriteLine();
+        Console.WriteLine("Developed by Blaqkstar, 2023");
+        Console.WriteLine($"Version: {ver}");
+        Console.WriteLine();
+        Console.WriteLine($"What's new with {ver}?");
+        Console.WriteLine("- Added output for player org webpage URL (if one exists publicly)");
+        Console.WriteLine("- Cleaned up output a little by separating org info block from player bio info block");
+        Console.WriteLine("- Created logic and output for /about command");
+        Console.WriteLine();
+    }
+
     private static void LaunchDonatePage()
     {
         // STILL NEED TO SET UP DONATION PAGE
         System.Diagnostics.Process.Start("explorer.exe", "http://google.com");
     }
+    /*private static void LaunchOrgPage(string orgURL)
+    {
+        // Launches browser to org page of last-searched player
+        System.Diagnostics.Process.Start("explorer.exe", $"http://www.robertsspaceindustries.com{orgURL}");
+    }*/
     static void PrintTitle()
     {
-        string ver = "v0.1.05";
+        string ver = "v0.1.06";
         string[] asciiArt = new string[]
         {
             "  _____       _       _         ___ _ _   _               ",
@@ -268,7 +332,6 @@ class Program
             "   / /\\/ '_ \\| __/ _ \\ |_____ / /  | | __| |_  / _ \\ '_ \\ ",
             "/\\/ /_ | | | | ||  __/ |_____/ /___| | |_| |/ /  __/ | | |",
             $"\\____/ |_| |_|\\__\\___|_|     \\____/|_|\\__|_/___\\___|_| |_|{ver}",
-            "                                      (C)Blaqkstar 2023"
         };
         string underline = "==================================================================";
 
@@ -283,6 +346,7 @@ class Program
             Console.WriteLine(line);
             Thread.Sleep(200); // Wait for 200ms
         }
+        Console.WriteLine();
         foreach (char c in underline)
         {
             Console.Write(c);
