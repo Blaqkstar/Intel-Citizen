@@ -35,7 +35,6 @@ class Program
         // debug mode toggle
         if (username == "/debug")
         {
-            debugMode = !debugMode;
             ToggleDebug(debugMode);
         }
 
@@ -53,9 +52,19 @@ class Program
             PrintAboutInfo();
             Console.WriteLine();
             Console.WriteLine("********************************");
-            Console.WriteLine();
         }
 
+        // org cmd
+        //if (username == "/org")
+        //{
+        //    Console.WriteLine();
+            
+        //}
+
+        // player cmd
+
+
+        // donate cmd
         if (username == "/donate")
         {
             LaunchDonatePage();
@@ -67,6 +76,7 @@ class Program
             string url = $"https://robertsspaceindustries.com/citizens/{username}";
             GetPlayerInfo(url, debugMode).Wait();
         }
+        Console.WriteLine();
     }
 
     static async Task GetPlayerInfo(string url, bool debugMode)
@@ -235,7 +245,6 @@ class Program
                     Console.WriteLine($"PLAYER BIO: N/A");
                     Console.WriteLine();
                     Console.WriteLine("--------------------------");
-                    Console.WriteLine();
                 }
                 else
                 {
@@ -244,7 +253,6 @@ class Program
                     Console.WriteLine(playerBio);
                     Console.WriteLine();
                     Console.WriteLine("--------------------------");
-                    Console.WriteLine();
                 }
             }
             else
@@ -252,7 +260,6 @@ class Program
                 Console.WriteLine("Player not found.");
                 Console.WriteLine();
                 Console.WriteLine("--------------------------");
-                Console.WriteLine();
             }
             Console.WriteLine();
         }
@@ -261,13 +268,12 @@ class Program
             Console.WriteLine($"An error occurred: {ex.Message}");
             Console.WriteLine();
             Console.WriteLine("--------------------------");
-            Console.WriteLine();
         }
     }
 
     private static void ToggleDebug(bool debugMode)
     {
-        
+        debugMode = !debugMode;
         if (debugMode == true)
         {
             Console.WriteLine("Debug Mode enabled. Use /debug again to disable.");
@@ -275,7 +281,7 @@ class Program
             Console.WriteLine("--------------------------");
             Console.WriteLine();
         }
-        else
+        else if (debugMode == false)
         {
             Console.WriteLine("Debug Mode disabled.");
             Console.WriteLine();
@@ -289,7 +295,7 @@ class Program
         Console.WriteLine("AVAILABLE COMMANDS:");
         Console.WriteLine("--------------------------");
         Console.WriteLine();
-        //Console.WriteLine("/org - pulls up org webpage of last-searched player");
+        Console.WriteLine("/org - pulls up org webpage of last-searched player");
         Console.WriteLine("/about - build info");
         Console.WriteLine("/donate - buy me a coffee :)");
         Console.WriteLine("/exit - closes Intel-Citizen");
