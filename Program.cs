@@ -3,28 +3,39 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Xml;
+using SC_Player_Intel_App;
 
 class Program
 {
+    Collections collections = new Collections();
+
     static void Main()
     {
+        Player player = new Player();
+        Program program = new Program(); // allows main to access methods
+        Collections collections = new Collections();
         bool debugMode = false;
+        bool isRunning = false;
 
         PrintTitle();
         Console.WriteLine();
+        isRunning = true;
 
-        while (true)
+        while (isRunning == true)
         {
             Console.Write("ENTER PLAYER NAME (or '/help' for help): ");
             string username = Console.ReadLine();
 
-            GetUserInput(username, debugMode);
+            program.GetUserInput(username, debugMode);
+            program.collections.SearchList.Add(player);
         }
     }
 
-    private static void GetUserInput(string username, bool debugMode)
+    public void GetUserInput(string username, bool debugMode)
     {
         // exit cmd
         if (username.ToLower() == "/exit")
@@ -79,8 +90,10 @@ class Program
         Console.WriteLine();
     }
 
-    static async Task GetPlayerInfo(string url, bool debugMode)
+    public async Task GetPlayerInfo(string url, bool debugMode)
     {
+        Player player = new Player(); // instantiates new temporary player object
+
         try
         {
             HttpClient client = new HttpClient();
@@ -111,6 +124,8 @@ class Program
                     if (node != null)
                     {
                         playerName = node.InnerText;
+                        player.Name = playerName;
+                        player.URL = url;
                     }
                     i++;
                 }
@@ -121,7 +136,7 @@ class Program
                 }
 
                 // prints player name
-                Console.WriteLine($"PLAYER NAME: {playerName}");
+                Console.WriteLine($"PLAYER NAME: {player.Name}");
 
                 // finds enlisted date
                 i = 0;
@@ -133,6 +148,7 @@ class Program
                     if (node != null)
                     {
                         enlistedDate = node.InnerText;
+                        player.EnlistedDate = enlistedDate;
                     }
                     i++;
                 }
@@ -150,7 +166,7 @@ class Program
                 }
                 else
                 {
-                    Console.WriteLine($"ENLISTED: {enlistedDate}");
+                    Console.WriteLine($"ENLISTED: {player.EnlistedDate}");
                 }
                 Console.WriteLine();
 
@@ -164,6 +180,7 @@ class Program
                     if (node != null)
                     {
                         orgName = node.InnerText;
+                        player.OrgName = orgName;
                     }
                     i++;
                     //Console.WriteLine(i);
@@ -181,7 +198,7 @@ class Program
                 }
                 else
                 {
-                    Console.WriteLine($"ORG: {orgName}");
+                    Console.WriteLine($"ORG: {player.OrgName}");
                 }
 
                 // finds org URL
@@ -195,6 +212,7 @@ class Program
                     if (node != null)
                     {
                         orgURL = node.GetAttributeValue("href", string.Empty);
+                        player.OrgURL = orgURL;
                     }
                     i++;
                     //Console.WriteLine(i);
@@ -212,7 +230,7 @@ class Program
                 }
                 else
                 {
-                    Console.WriteLine($"ORG URL: http://www.robertsspaceindustries.com{orgURL}");
+                    Console.WriteLine($"ORG URL: http://www.robertsspaceindustries.com{player.OrgURL}");
                 }
                 Console.WriteLine();
 
@@ -227,6 +245,7 @@ class Program
                     {
                         playerBio = node.InnerText;
                         playerBio = playerBio.Trim();
+                        player.Bio = playerBio;
                     }
                     i++;
                 }
@@ -237,7 +256,7 @@ class Program
                 }
 
                 // prints URL to player profile
-                Console.WriteLine($"PROFILE URL: {url}");
+                Console.WriteLine($"PROFILE URL: {player.URL}");
 
                 // prints player bio
                 if (playerBio == null)
@@ -250,7 +269,7 @@ class Program
                 {
                     Console.WriteLine();
                     Console.WriteLine($"PLAYER BIO:");
-                    Console.WriteLine(playerBio);
+                    Console.WriteLine(player.Bio);
                     Console.WriteLine();
                     Console.WriteLine("--------------------------");
                 }
