@@ -8,6 +8,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using System.Xml;
 using SC_Player_Intel_App;
+using System.Net.Mail;
 
 class Program
 {
@@ -31,7 +32,6 @@ class Program
             string username = Console.ReadLine();
 
             program.GetUserInput(username, debugMode);
-            program.collections.SearchList.Add(player);
         }
     }
 
@@ -68,7 +68,7 @@ class Program
         // list cmd
         if (username == "/list")
         {
-            ListMenu();
+            PrintListMenu();
         }
 
 
@@ -79,7 +79,7 @@ class Program
         }
 
         // processes query
-        if (username != "/debug" && username != "/help" && username != "/?" && username != "/donate" && username != "/about")
+        if (username != "/debug" && username != "/help" && username != "/?" && username != "/donate" && username != "/about" && username != "/list")
         {
             string url = $"https://robertsspaceindustries.com/citizens/{username}";
             GetPlayerInfo(url, debugMode).Wait();
@@ -132,6 +132,10 @@ class Program
                     Console.WriteLine("DEBUG CONSOLE: Unable to retrieve player name.");
                 }
 
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("--------------------------");
+                Console.ResetColor();
+                Console.WriteLine();
                 // prints player name
                 Console.WriteLine($"PLAYER NAME: {player.Name}");
 
@@ -209,7 +213,7 @@ class Program
                     if (node != null)
                     {
                         orgURL = node.GetAttributeValue("href", string.Empty);
-                        player.OrgURL = orgURL;
+                        player.OrgURL = $"http://www.robertsspaceindustries.com{orgURL}";
                     }
                     i++;
                     //Console.WriteLine(i);
@@ -227,7 +231,7 @@ class Program
                 }
                 else
                 {
-                    Console.WriteLine($"ORG URL: http://www.robertsspaceindustries.com{player.OrgURL}");
+                    Console.WriteLine($"ORG URL: {player.OrgURL}");
                 }
                 Console.WriteLine();
 
@@ -260,7 +264,9 @@ class Program
                 {
                     Console.WriteLine($"PLAYER BIO: N/A");
                     Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine("--------------------------");
+                    Console.ResetColor();
                 }
                 else
                 {
@@ -268,14 +274,19 @@ class Program
                     Console.WriteLine($"PLAYER BIO:");
                     Console.WriteLine(player.Bio);
                     Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.WriteLine("--------------------------");
+                    Console.ResetColor();
                 }
+                collections.SearchList.Add(player);
             }
             else
             {
                 Console.WriteLine("Player not found.");
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.WriteLine("--------------------------");
+                Console.ResetColor();
             }
             Console.WriteLine();
         }
@@ -283,13 +294,135 @@ class Program
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("--------------------------");
+            Console.ResetColor();
         }
     }
 
-    private void ListMenu()
+    private void PrintListMenu()
     {
         // need to build this out. Should include options to list recent players and manipulate that information to add them to sublists like hitlists, etc
+        string[] listOptions = new string[] { "[1] Recently Searched", "[2] Target List", "[3] Whitelist", "[4] Back" };
+        List<Player> recentlySearched = collections.SearchList;
+        List<Player> targetList = collections.TargetList;
+
+        Console.WriteLine();
+        string listChoice = "UNDEFINED LIST CHOICE";
+
+        do
+        {
+            foreach (string s in listOptions)
+            {
+                Console.WriteLine(s);
+            }
+            Console.WriteLine();
+            Console.Write("CHOOSE A LIST: ");
+            listChoice = Console.ReadLine();
+
+            if (listChoice == "1")
+            {
+                Console.WriteLine();
+                RecentlySearchedListInteraction();
+            }
+            else if (listChoice == "2")
+            {
+                TargetListInteraction();
+            }
+            else if (listChoice == "3")
+            {
+                WhiteListInteraction();
+            }
+        }
+        while (listChoice != "4");
+
+        void RecentlySearchedListInteraction()
+        {
+            int playerChoice = -1;
+            string input;
+            do
+            {
+                int c = 1;
+
+                Console.WriteLine("RECENT SEARCHES:");
+                Console.WriteLine();
+                for (int i = recentlySearched.Count - 1; i >= 0; i--)
+                {
+                    Console.WriteLine($"{c}: {recentlySearched[i].Name}");
+                    c++;
+                }
+
+                Console.WriteLine();
+                Console.Write("SELECT A PLAYER (or use /back to return to the previous screen): ");
+                input = Console.ReadLine();
+
+                if (input == "/back")
+                {
+                    break;
+                }
+
+                playerChoice = int.TryParse(input, out int result) ? result : -1;
+            }
+            while (playerChoice <= 0 || playerChoice > recentlySearched.Count);
+
+            if (input != "/back")
+            {
+                Player selectedPlayer = recentlySearched[playerChoice - 1]; // Uses playerChoice
+
+                Console.WriteLine();
+                Console.WriteLine("--------------------------");
+                Console.WriteLine();
+                Console.WriteLine($"PLAYER NAME: {selectedPlayer.Name}");
+                Console.WriteLine($"ENLISTED: {selectedPlayer.EnlistedDate}");
+                if (selectedPlayer.Bounty != null)
+                {
+                    Console.WriteLine($"BOUNTY: {selectedPlayer.Bounty}");
+                }
+                else
+                {
+                    Console.WriteLine($"BOUNTY: N/A");
+                }
+                Console.WriteLine();
+                if (selectedPlayer.OrgName != null)
+                {
+                    Console.WriteLine($"ORG NAME: {selectedPlayer.OrgName}");
+                }
+                else
+                {
+                    Console.WriteLine($"ORG NAME: N/A");
+                }
+                if (selectedPlayer.OrgURL != null)
+                {
+                    Console.WriteLine($"ORG URL: {selectedPlayer.OrgURL}");
+                }
+                else
+                {
+                    Console.WriteLine($"ORG URL: N/A");
+                }
+                Console.WriteLine();
+                Console.WriteLine($"PROFILE URL: {selectedPlayer.URL}");
+                if (selectedPlayer.Bio != null)
+                {
+                    Console.WriteLine($"PLAYER BIO: {selectedPlayer.Bio}");
+                }
+                else
+                {
+                    Console.WriteLine($"PLAYER BIO: N/A");
+                }
+                Console.WriteLine();
+                Console.WriteLine("--------------------------");
+                Console.WriteLine();
+            }
+        }
+
+        void TargetListInteraction()
+        {
+
+        }
+        void WhiteListInteraction()
+        {
+
+        }
     }
 
     private static void ToggleDebug(bool debugMode)
@@ -316,7 +449,7 @@ class Program
         Console.WriteLine("AVAILABLE COMMANDS:");
         Console.WriteLine("--------------------------");
         Console.WriteLine();
-        Console.WriteLine("/org - pulls up org webpage of last-searched player");
+        Console.WriteLine("/list - interact with a variety of lists");
         Console.WriteLine("/about - build info");
         Console.WriteLine("/donate - buy me a coffee :)");
         Console.WriteLine("/exit - closes Intel-Citizen");
@@ -327,15 +460,13 @@ class Program
 
     private static void PrintAboutInfo()
     {
-        string ver = "v0.1.06";
+        string ver = "v0.1.08";
         Console.WriteLine();
         Console.WriteLine("Developed by Blaqkstar, 2023");
         Console.WriteLine($"Version: {ver}");
         Console.WriteLine();
         Console.WriteLine($"What's new with {ver}?");
-        Console.WriteLine("- Added output for player org webpage URL (if one exists publicly)");
-        Console.WriteLine("- Cleaned up output a little by separating org info block from player bio info block");
-        Console.WriteLine("- Created logic and output for /about command");
+        Console.WriteLine("- Began work on list system");
         Console.WriteLine();
     }
 
@@ -344,14 +475,10 @@ class Program
         // STILL NEED TO SET UP DONATION PAGE
         System.Diagnostics.Process.Start("explorer.exe", "http://google.com");
     }
-    /*private static void LaunchOrgPage(string orgURL)
-    {
-        // Launches browser to org page of last-searched player
-        System.Diagnostics.Process.Start("explorer.exe", $"http://www.robertsspaceindustries.com{orgURL}");
-    }*/
+   
     static void PrintTitle()
     {
-        string ver = "v0.1.06";
+        string ver = "v0.1.08";
         string[] asciiArt = new string[]
         {
             "  _____       _       _         ___ _ _   _               ",
@@ -360,25 +487,30 @@ class Program
             "/\\/ /_ | | | | ||  __/ |_____/ /___| | |_| |/ /  __/ | | |",
             $"\\____/ |_| |_|\\__\\___|_|     \\____/|_|\\__|_/___\\___|_| |_|{ver}",
         };
+
         string underline = "==================================================================";
 
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         foreach (char c in underline)
         {
             Console.Write(c);
             Thread.Sleep(1);
         }
         Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.DarkRed;
         foreach (string line in asciiArt)
         {
             Console.WriteLine(line);
             Thread.Sleep(200); // Wait for 200ms
         }
         Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         foreach (char c in underline)
         {
             Console.Write(c);
             Thread.Sleep(1);
         }
+        Console.ResetColor();
         Console.WriteLine();
 
     }

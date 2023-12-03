@@ -11,5 +11,7 @@ namespace SC_Player_Intel_App
     {
         public Player player = new Player();
         public List<Player> SearchList = new List<Player>();
+        public List<Player> TargetList = new List<Player>();
+        public List<WhiteListedPlayer> WhiteList = new List<WhiteListedPlayer>();
     }
 }
