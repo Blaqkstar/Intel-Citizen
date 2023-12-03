@@ -65,14 +65,11 @@ class Program
             Console.WriteLine("********************************");
         }
 
-        // org cmd
-        //if (username == "/org")
-        //{
-        //    Console.WriteLine();
-            
-        //}
-
-        // player cmd
+        // list cmd
+        if (username == "/list")
+        {
+            ListMenu();
+        }
 
 
         // donate cmd
@@ -288,6 +285,11 @@ class Program
             Console.WriteLine();
             Console.WriteLine("--------------------------");
         }
+    }
+
+    private void ListMenu()
+    {
+        // need to build this out. Should include options to list recent players and manipulate that information to add them to sublists like hitlists, etc
     }
 
     private static void ToggleDebug(bool debugMode)
