@@ -340,6 +340,7 @@ class Program
         {
             int playerChoice = -1;
             string input;
+            
             do
             {
                 int c = 1;
@@ -348,7 +349,7 @@ class Program
                 Console.WriteLine();
                 for (int i = recentlySearched.Count - 1; i >= 0; i--)
                 {
-                    Console.WriteLine($"{c}: {recentlySearched[i].Name}");
+                    Console.WriteLine($"{i+1}: {recentlySearched[i].Name}");
                     c++;
                 }
 
@@ -370,7 +371,9 @@ class Program
                 Player selectedPlayer = recentlySearched[playerChoice - 1]; // Uses playerChoice
 
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
                 Console.WriteLine("--------------------------");
+                Console.ResetColor();
                 Console.WriteLine();
                 Console.WriteLine($"PLAYER NAME: {selectedPlayer.Name}");
                 Console.WriteLine($"ENLISTED: {selectedPlayer.EnlistedDate}");
@@ -410,8 +413,44 @@ class Program
                     Console.WriteLine($"PLAYER BIO: N/A");
                 }
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("--------------------------");
+                Console.ResetColor();
                 Console.WriteLine();
+
+                string[] actionStrings = new string[] { "[1] Add Player to Target List", "[2] Remove Player from Target List", "[3] Remove Player from Search History", "[4] Back"};
+
+                foreach (string s in actionStrings)
+                {
+                    Console.WriteLine(s);
+                }
+                Console.WriteLine();
+
+                int choice = -1;
+
+                do
+                {
+                    Console.Write("CHOOSE ACTION: ");
+                    choice = Console.Read();
+                } 
+                while (choice <= 0 && choice > actionStrings.Length);
+
+                if (choice != 4)
+                {
+                    if (choice == 1)
+                    {
+                        targetList.Add(selectedPlayer);
+
+                    }
+                    else if (choice == 2)
+                    {
+                        targetList.Remove(selectedPlayer);
+                    }
+                    else if (choice == 3)
+                    {
+                        recentlySearched.Remove(selectedPlayer);
+                    }
+                }
             }
         }
 
