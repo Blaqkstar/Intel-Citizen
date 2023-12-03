@@ -349,7 +349,7 @@ class Program
                 Console.WriteLine();
                 for (int i = recentlySearched.Count - 1; i >= 0; i--)
                 {
-                    Console.WriteLine($"{i+1}: {recentlySearched[i].Name}");
+                    Console.WriteLine($"[{i+1}] {recentlySearched[i].Name}");
                     c++;
                 }
 
@@ -431,24 +431,39 @@ class Program
                 do
                 {
                     Console.Write("CHOOSE ACTION: ");
-                    choice = Console.Read();
+                    choice = int.Parse(Console.ReadLine());
+                    Console.WriteLine();
                 } 
-                while (choice <= 0 && choice > actionStrings.Length);
+                while (choice <= 0 || choice > actionStrings.Length);
 
                 if (choice != 4)
                 {
                     if (choice == 1)
                     {
                         targetList.Add(selectedPlayer);
-
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine($"ADDED {selectedPlayer.Name} TO TARGET LIST");
+                        Console.ResetColor();
+                        Console.WriteLine();
                     }
                     else if (choice == 2)
                     {
                         targetList.Remove(selectedPlayer);
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine($"REMOVED {selectedPlayer.Name} TO TARGET LIST");
+                        Console.ResetColor();
+                        Console.WriteLine();
                     }
                     else if (choice == 3)
                     {
                         recentlySearched.Remove(selectedPlayer);
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine($"REMOVED {selectedPlayer.Name} FROM SEARCH HISTORY");
+                        Console.ResetColor();
+                        Console.WriteLine();
                     }
                 }
             }
