@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using SC_Player_Intel_App;
@@ -104,6 +105,7 @@ class Program
                     await Task.Delay(200);
                     Console.Write(".");
                 }
+                Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine();
 
@@ -264,7 +266,7 @@ class Program
                 {
                     Console.WriteLine($"PLAYER BIO: N/A");
                     Console.WriteLine();
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("--------------------------");
                     Console.ResetColor();
                 }
@@ -274,7 +276,7 @@ class Program
                     Console.WriteLine($"PLAYER BIO:");
                     Console.WriteLine(player.Bio);
                     Console.WriteLine();
-                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("--------------------------");
                     Console.ResetColor();
                 }
@@ -284,7 +286,7 @@ class Program
             {
                 Console.WriteLine("Player not found.");
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("--------------------------");
                 Console.ResetColor();
             }
@@ -294,7 +296,7 @@ class Program
         {
             Console.WriteLine($"An error occurred: {ex.Message}");
             Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine("--------------------------");
             Console.ResetColor();
         }
