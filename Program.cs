@@ -509,15 +509,16 @@ class Program
                             }
                             else
                             {
+                                whiteListedPlayer.ReasonForWhitelist = input.Trim();
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.WriteLine("SAVED");
                                 Console.ResetColor();
                                 Console.WriteLine();
-                                break;
+                                validInput = true;
                             }
                         } while (!validInput);
 
-                        // copies attributes from selectePlayer to WhitelistedPlayer
+                        // copies attributes from selectedPlayer to WhitelistedPlayer
                         whiteListedPlayer.Name = selectedPlayer.Name;
                         whiteListedPlayer.EnlistedDate = selectedPlayer.EnlistedDate;
                         whiteListedPlayer.URL = selectedPlayer.URL;
