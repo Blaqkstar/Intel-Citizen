@@ -16,6 +16,8 @@ namespace SC_Player_Intel_App
         private string bio;
         private int bounty;
         private string notes;
+        private bool isOnTargetList;
+        private bool isOnWhiteList;
 
 
         public string Name
@@ -62,6 +64,16 @@ namespace SC_Player_Intel_App
         {
             set { notes = value; }
             get { return notes; }
+        }
+        public bool IsOnTargetList
+        {
+            set { isOnTargetList = value; }
+            get { return isOnTargetList; }
+        }
+        public bool IsOnWhiteList
+        {
+            set { isOnWhiteList = value; }
+            get { return isOnWhiteList; }
         }
     }
 }

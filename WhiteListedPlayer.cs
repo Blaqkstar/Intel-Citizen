@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SC_Player_Intel_App
 {
-    public class WhiteListedPlayer
+    public class WhiteListedPlayer: Player
     {
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

@@ -308,6 +308,7 @@ class Program
         string[] listOptions = new string[] { "[1] Recently Searched", "[2] Target List", "[3] Whitelist", "[4] Back" };
         List<Player> recentlySearched = collections.SearchList;
         List<Player> targetList = collections.TargetList;
+        List<WhiteListedPlayer> whiteListedPlayers = collections.WhiteList;
 
         Console.WriteLine();
         string listChoice = "UNDEFINED LIST CHOICE";
@@ -342,7 +343,8 @@ class Program
         {
             int playerChoice = -1;
             string input;
-            
+            bool validInput = false;
+
             do
             {
                 int c = 1;
@@ -356,7 +358,7 @@ class Program
                 }
 
                 Console.WriteLine();
-                Console.Write("SELECT A PLAYER (or use /back to return to the previous screen): ");
+                Console.Write("SELECT A PLAYER (or '/back' to return to previous menu): ");
                 input = Console.ReadLine();
 
                 if (input == "/back")
@@ -420,7 +422,7 @@ class Program
                 Console.ResetColor();
                 Console.WriteLine();
 
-                string[] actionStrings = new string[] { "[1] Add Player to Target List", "[2] Remove Player from Target List", "[3] Remove Player from Search History", "[4] Back"};
+                string[] actionStrings = new string[] { "[1] Add Player to Target List", "[2] Add Player to Whitelist", "[3] Remove Player from Search History", "[4] Back"};
 
                 foreach (string s in actionStrings)
                 {
@@ -438,26 +440,100 @@ class Program
                 } 
                 while (choice <= 0 || choice > actionStrings.Length);
 
+                
+
                 if (choice != 4)
                 {
+                    // player added to target list
                     if (choice == 1)
                     {
+                        Console.Write("ADD BOUNTY? (Y/N)");
+                        do
+                        {
+                            input = Console.ReadLine();
+                            input = input.ToLower();
+                            if (input == "y")
+                            {
+                                Console.Write("ENTER BOUNTY AMOUNT:");
+                                int bountyAmount;
+                                if (Int32.TryParse(Console.ReadLine(), out bountyAmount))
+                                {
+                                    selectedPlayer.Bounty = bountyAmount;
+                                    Console.WriteLine($"{selectedPlayer.Name} BOUNTY INCREASED TO {bountyAmount} aUEC");
+                                    validInput = true;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.WriteLine("INVALID INTEGER");
+                                    Console.ResetColor();
+                                    Console.WriteLine();
+                                    continue;
+                                }
+                            }
+                            else if (input == "n")
+                            {
+                                break;
+                            }
+                            else continue;
+                        } while (validInput == false);
+
                         targetList.Add(selectedPlayer);
+                        selectedPlayer.IsOnTargetList = true;
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine($"ADDED {selectedPlayer.Name} TO TARGET LIST");
                         Console.ResetColor();
                         Console.WriteLine();
                     }
+                    // player added to whitelist
                     else if (choice == 2)
                     {
-                        targetList.Remove(selectedPlayer);
+                        WhiteListedPlayer whiteListedPlayer = new WhiteListedPlayer();
+                        validInput = false;
+                        do
+                        {
+                            Console.Write("REASON FOR WHITELIST: ");
+                            input = Console.ReadLine();
+                            if (input.Length < 3)
+                            {
+                                Console.WriteLine("WHITELIST REASON MUST BE AT LEAST 3 CHARACTERS LONG");
+                                Console.WriteLine();
+                                continue;
+                            }
+                            else if (input.Length > 64)
+                            {
+                                Console.WriteLine("WHITELIST REASON CANNOT EXCEED 64 CHARACTERS");
+                                Console.WriteLine();
+                                continue;
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.WriteLine("SAVED");
+                                Console.ResetColor();
+                                Console.WriteLine();
+                                break;
+                            }
+                        } while (!validInput);
+
+                        // copies attributes from selectePlayer to WhitelistedPlayer
+                        whiteListedPlayer.Name = selectedPlayer.Name;
+                        whiteListedPlayer.EnlistedDate = selectedPlayer.EnlistedDate;
+                        whiteListedPlayer.URL = selectedPlayer.URL;
+                        whiteListedPlayer.OrgName = selectedPlayer.OrgName;
+                        whiteListedPlayer.OrgURL = selectedPlayer.OrgURL;
+                        whiteListedPlayer.Bio = selectedPlayer.Bio;
+                        whiteListedPlayer.Notes = selectedPlayer.Notes;
+
+                        collections.WhiteList.Add(whiteListedPlayer);
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine($"REMOVED {selectedPlayer.Name} TO TARGET LIST");
+                        Console.WriteLine($"ADDED {whiteListedPlayer.Name} TO WHITELIST");
                         Console.ResetColor();
                         Console.WriteLine();
                     }
+                    // player removed from search history
                     else if (choice == 3)
                     {
                         recentlySearched.Remove(selectedPlayer);
@@ -553,7 +629,7 @@ class Program
             Thread.Sleep(1);
         }
         Console.WriteLine();
-        Console.ForegroundColor = ConsoleColor.DarkRed;
+        Console.ForegroundColor = ConsoleColor.DarkGreen;
         foreach (string line in asciiArt)
         {
             Console.WriteLine(line);
