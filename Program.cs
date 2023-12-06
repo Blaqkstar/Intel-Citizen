@@ -367,8 +367,8 @@ class Program
                 }
 
                 playerChoice = int.TryParse(input, out int result) ? result : -1;
-            }
-            while (playerChoice <= 0 || playerChoice > recentlySearched.Count);
+            } while (playerChoice <= 0 || playerChoice > recentlySearched.Count);
+
 
             if (input != "/back")
             {
@@ -495,13 +495,17 @@ class Program
                             input = Console.ReadLine();
                             if (input.Length < 3)
                             {
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.WriteLine("WHITELIST REASON MUST BE AT LEAST 3 CHARACTERS LONG");
+                                Console.ResetColor();
                                 Console.WriteLine();
                                 continue;
                             }
                             else if (input.Length > 64)
                             {
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.WriteLine("WHITELIST REASON CANNOT EXCEED 64 CHARACTERS");
+                                Console.ResetColor();
                                 Console.WriteLine();
                                 continue;
                             }
@@ -549,7 +553,191 @@ class Program
 
         void TargetListInteraction()
         {
+            int playerChoice = -1;
+            string input;
+            bool validInput = false;
 
+            do
+            {
+                int c = 1;
+
+                Console.WriteLine("TARGET LIST:");
+                Console.WriteLine();
+                for (int i = targetList.Count - 1; i >= 0; i--)
+                {
+                    Console.WriteLine($"[{i + 1}] {targetList[i].Name}");
+                    c++;
+                }
+
+                Console.WriteLine();
+                Console.Write("SELECT A PLAYER (or '/back' to return to previous menu): ");
+                input = Console.ReadLine();
+
+                if (input == "/back")
+                {
+                    break;
+                }
+
+                playerChoice = int.TryParse(input, out int result) ? result : -1;
+            } while (playerChoice <= 0 || playerChoice > targetList.Count);
+
+            if (input != "/back")
+            {
+                Player selectedPlayer = targetList[playerChoice - 1]; // Uses playerChoice
+
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("--------------------------");
+                Console.ResetColor();
+                Console.WriteLine();
+                Console.WriteLine($"TARGET NAME: {selectedPlayer.Name}");
+                Console.WriteLine($"ENLISTED: {selectedPlayer.EnlistedDate}");
+                if (selectedPlayer.Bounty != null)
+                {
+                    Console.WriteLine($"BOUNTY: {selectedPlayer.Bounty}");
+                }
+                else
+                {
+                    Console.WriteLine($"BOUNTY: N/A");
+                }
+                Console.WriteLine();
+                if (selectedPlayer.OrgName != null)
+                {
+                    Console.WriteLine($"ORG NAME: {selectedPlayer.OrgName}");
+                }
+                else
+                {
+                    Console.WriteLine($"ORG NAME: N/A");
+                }
+                if (selectedPlayer.OrgURL != null)
+                {
+                    Console.WriteLine($"ORG URL: {selectedPlayer.OrgURL}");
+                }
+                else
+                {
+                    Console.WriteLine($"ORG URL: N/A");
+                }
+                Console.WriteLine();
+                Console.WriteLine($"PROFILE URL: {selectedPlayer.URL}");
+                if (selectedPlayer.Notes != null)
+                {
+                    Console.WriteLine($"TARGET BIO: {selectedPlayer.Notes}");
+                }
+                else
+                {
+                    Console.WriteLine($"TARGET NOTES: N/A");
+                }
+
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("--------------------------");
+                Console.ResetColor();
+                Console.WriteLine();
+
+                string[] actionStrings = new string[] { "[1] Update Target Info", "[2] Remove Target", "[3] Back" };
+                string[] updateActionStrings = new string[] { "[1] Update Bounty", "[2] Update Notes", "[3] Back" };
+
+                foreach (string s in actionStrings)
+                {
+                    Console.WriteLine(s);
+                }
+                Console.WriteLine();
+
+                int choice = -1;
+
+                do
+                {
+                    Console.Write("CHOOSE ACTION: ");
+                    choice = int.Parse(Console.ReadLine());
+                    Console.WriteLine();
+                }
+                while (choice <= 0 || choice > actionStrings.Length);
+
+                if (choice != 3)
+                {
+                    // Update Target Info
+                    if (choice == 1)
+                    {
+                        // gets player choice re: info to update (bounty or notes)
+                        do
+                        {
+                            do
+                            {
+                                foreach (string s in updateActionStrings)
+                                {
+                                    Console.WriteLine(s);
+                                }
+
+                                Console.WriteLine();
+                                Console.Write("ITEM TO UPDATE: ");
+                                choice = int.Parse(Console.ReadLine());
+                                Console.WriteLine();
+                            } while (choice <= 0 || choice > updateActionStrings.Length);
+
+                            // user selects to update bounty info
+                            if (choice == 1)
+                            {
+                                Console.Write($"UPDATE {selectedPlayer.Name} BOUNTY AMOUNT:");
+                                int bountyAmount;
+                                if (Int32.TryParse(Console.ReadLine(), out bountyAmount))
+                                {
+                                    selectedPlayer.Bounty = bountyAmount;
+                                    Console.WriteLine($"{selectedPlayer.Name} BOUNTY UPDATED TO {bountyAmount} aUEC");
+                                    validInput = true;
+                                }
+                                else
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.WriteLine("INVALID INTEGER");
+                                    Console.ResetColor();
+                                    Console.WriteLine();
+                                    continue;
+                                }
+                            }
+                            // user selects to update target note info
+                            else if (choice == 2)
+                            {
+                                validInput = false;
+
+                                do
+                                {
+                                    Console.Write("ENTER TARGET NOTE: ");
+                                    input = Console.ReadLine();
+                                    if (input.Length < 3)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine("NOTE LENGTH MUST BE AT LEAST 3 CHARACTERS");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        continue;
+                                    }
+                                    else if (input.Length > 2000)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine("NOTE LENGTH CANNOT EXCEED 2000 CHARACTERS");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        selectedPlayer.Notes = input.Trim();
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine();
+                                        Console.WriteLine($"NOTE SAVED TO TARGET {selectedPlayer.Name}");
+                                        Console.ResetColor();
+                                        validInput = true;
+                                    }
+                                } while (!validInput);
+                            }
+                            else if (choice == 3)
+                            {
+                                break;
+                            }
+                        } while (validInput == false);
+                    }
+                }
+            }
         }
         void WhiteListInteraction()
         {
