@@ -511,9 +511,9 @@ class Program
                             {
                                 whiteListedPlayer.ReasonForWhitelist = input.Trim();
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.WriteLine();
                                 Console.WriteLine("SAVED");
                                 Console.ResetColor();
-                                Console.WriteLine();
                                 validInput = true;
                             }
                         } while (!validInput);
@@ -531,6 +531,7 @@ class Program
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine($"ADDED {whiteListedPlayer.Name} TO WHITELIST");
+                        Console.WriteLine($"REASON FOR WHITELIST: {whiteListedPlayer.ReasonForWhitelist}");
                         Console.ResetColor();
                         Console.WriteLine();
                     }
@@ -563,7 +564,7 @@ class Program
         debugMode = !debugMode;
         if (debugMode == true)
         {
-            Console.WriteLine("Debug Mode enabled. Use /debug again to disable.");
+            Console.WriteLine("Debug Mode enabled. Use '/debug' again to disable.");
             Console.WriteLine();
             Console.WriteLine("--------------------------");
             Console.WriteLine();
