@@ -440,8 +440,6 @@ class Program
                 } 
                 while (choice <= 0 || choice > actionStrings.Length);
 
-                
-
                 if (choice != 4)
                 {
                     // player added to target list
