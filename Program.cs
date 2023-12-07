@@ -336,7 +336,17 @@ class Program
             else if (listChoice == "2")
             {
                 Console.WriteLine();
-                TargetListInteraction();
+                if (targetList.Count < 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("TARGET LIST IS EMPTY");
+                    Console.WriteLine();
+                    Console.ResetColor();
+                }
+                else
+                {
+                    TargetListInteraction();
+                }
             }
             else if (listChoice == "3")
             {
@@ -460,7 +470,7 @@ class Program
                     }
                     catch (FormatException)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.WriteLine("INVALID INTEGER");
                         Console.ResetColor();
                         choice = 0; // Reset choice
@@ -493,6 +503,7 @@ class Program
                                     if (bountyAmount > selectedPlayer.Bounty)
                                     {
                                         selectedPlayer.Bounty = bountyAmount;
+                                        Console.WriteLine();
                                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                                         Console.WriteLine($"{selectedPlayer.Name} BOUNTY INCREASED TO {bountyAmount} aUEC");
                                         Console.ResetColor();
@@ -508,6 +519,7 @@ class Program
                                     }
                                     else
                                     {
+                                        Console.WriteLine();
                                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                                         Console.WriteLine($"NO CHANGES RECORDED TO {selectedPlayer.Name} BOUNTY");
                                         Console.ResetColor();
@@ -516,7 +528,8 @@ class Program
                                 }
                                 else
                                 {
-                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.WriteLine();
+                                    Console.ForegroundColor = ConsoleColor.DarkGray;
                                     Console.WriteLine("INVALID INTEGER");
                                     Console.ResetColor();
                                     Console.WriteLine();
@@ -552,7 +565,7 @@ class Program
                             input = Console.ReadLine();
                             if (input.Length < 3)
                             {
-                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.ForegroundColor = ConsoleColor.DarkGray;
                                 Console.WriteLine("WHITELIST REASON MUST BE AT LEAST 3 CHARACTERS LONG");
                                 Console.ResetColor();
                                 Console.WriteLine();
@@ -560,7 +573,7 @@ class Program
                             }
                             else if (input.Length > 64)
                             {
-                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.ForegroundColor = ConsoleColor.DarkGray;
                                 Console.WriteLine("WHITELIST REASON CANNOT EXCEED 64 CHARACTERS");
                                 Console.ResetColor();
                                 Console.WriteLine();
@@ -716,7 +729,7 @@ class Program
                     }
                     catch (FormatException)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.WriteLine("INVALID INTEGER");
                         Console.ResetColor();
                         Console.WriteLine();
@@ -789,7 +802,7 @@ class Program
                                     input = Console.ReadLine();
                                     if (input.Length < 3)
                                     {
-                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.ForegroundColor = ConsoleColor.DarkGray;
                                         Console.WriteLine("NOTE LENGTH MUST BE AT LEAST 3 CHARACTERS");
                                         Console.ResetColor();
                                         Console.WriteLine();
@@ -797,7 +810,7 @@ class Program
                                     }
                                     else if (input.Length > 2000)
                                     {
-                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.ForegroundColor = ConsoleColor.DarkGray;
                                         Console.WriteLine("NOTE LENGTH CANNOT EXCEED 2000 CHARACTERS");
                                         Console.ResetColor();
                                         Console.WriteLine();
@@ -829,14 +842,14 @@ class Program
                             }
                         } while (validInput == false);
                     }
+                    // user selects to remove target from list
                     else if (choice == 2)
                     {
-                        // remove player from target list
                         targetList.Remove(selectedPlayer);
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine();
                         Console.WriteLine($"REMOVED {selectedPlayer.Name} FROM TARGET LIST");
                         Console.ResetColor();
+                        Console.WriteLine();
                         break;
                     }
                     else
@@ -861,14 +874,18 @@ class Program
         debugMode = !debugMode;
         if (debugMode == true)
         {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Debug Mode enabled. Use '/debug' again to disable.");
+            Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine("--------------------------");
             Console.WriteLine();
         }
         else if (debugMode == false)
         {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine("Debug Mode disabled.");
+            Console.ResetColor();
             Console.WriteLine();
             Console.WriteLine("--------------------------");
             Console.WriteLine();
@@ -897,10 +914,14 @@ class Program
     {
         string ver = "v0.1.09";
         Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine("Developed by Blaqkstar, 2023");
         Console.WriteLine($"Version: {ver}");
+        Console.ResetColor();
         Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"What's new with {ver}?");
+        Console.ResetColor();
         Console.WriteLine("- Began work on list system");
         Console.WriteLine();
     }
