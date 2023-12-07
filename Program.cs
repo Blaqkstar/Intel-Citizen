@@ -15,7 +15,7 @@ class Program
 {
     Collections collections = new Collections();
 
-    static void Main()
+    static void Main(string[] args)
     {
         Player player = new Player();
         Program program = new Program(); // allows main to access methods
@@ -27,6 +27,7 @@ class Program
         Console.WriteLine();
         isRunning = true;
 
+        // main program loop
         while (isRunning == true)
         {
             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -34,7 +35,6 @@ class Program
             Console.ResetColor();
             string username = Console.ReadLine();
             username = username.Trim();
-
             program.GetUserInput(username, debugMode);
         }
     }
@@ -108,7 +108,6 @@ class Program
                     await Task.Delay(200);
                     Console.Write(".");
                 }
-                Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine();
 
@@ -285,6 +284,7 @@ class Program
                 }
                 collections.SearchList.Add(player);
             }
+            // no player found
             else
             {
                 Console.WriteLine("Player not found.");
@@ -307,11 +307,10 @@ class Program
 
     private void PrintListMenu()
     {
-        // need to build this out. Should include options to list recent players and manipulate that information to add them to sublists like hitlists, etc
         string[] listOptions = new string[] { "[1] Recently Searched", "[2] Target List", "[3] Whitelist", "[4] Back" };
         List<Player> recentlySearched = collections.SearchList;
         List<Player> targetList = collections.TargetList;
-        List<WhiteListedPlayer> whiteListedPlayers = collections.WhiteList;
+        List<WhiteListedPlayer> whiteList = collections.WhiteList;
 
         Console.WriteLine();
         string listChoice = "UNDEFINED LIST CHOICE";
@@ -336,6 +335,7 @@ class Program
             else if (listChoice == "2")
             {
                 Console.WriteLine();
+                // if targetlist is empty
                 if (targetList.Count < 1)
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -351,7 +351,23 @@ class Program
             else if (listChoice == "3")
             {
                 Console.WriteLine();
-                WhiteListInteraction();
+                // if whitelist is empty
+                if (whiteList.Count < 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("WHITELIST IS EMPTY");
+                    Console.WriteLine();
+                    Console.ResetColor();
+                }
+                else
+                {
+                    WhiteListInteraction();
+                }
+                
+            }
+            else if (listChoice == "4")
+            {
+                continue;
             }
             else
             {
@@ -359,7 +375,7 @@ class Program
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 Console.WriteLine("INVALID CHOICE");
                 Console.ResetColor();
-                continue;
+                Console.WriteLine();
             }
         }
         while (listChoice != "4");
@@ -865,7 +881,10 @@ class Program
         }
         void WhiteListInteraction()
         {
-
+            // need to build this out
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("WHITELIST COMING IN v0.2.0");
+            Console.ResetColor();
         }
     }
 
@@ -922,7 +941,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"What's new with {ver}?");
         Console.ResetColor();
-        Console.WriteLine("- Began work on list system");
+        Console.WriteLine("- Built out target list and implemented ability for user to add/remove targets to/from the list, add/modify target bounties, and add notes to target profiles");
         Console.WriteLine();
     }
 
