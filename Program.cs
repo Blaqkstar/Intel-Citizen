@@ -765,23 +765,23 @@ class Program
                         // gets user choice re: info to update (bounty or notes)
                         do
                         {
+                            int updateChoice = -1;
                             do
                             {
                                 foreach (string s in updateActionStrings)
                                 {
                                     Console.WriteLine(s);
                                 }
-
                                 Console.WriteLine();
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.Write("ITEM TO UPDATE: ");
                                 Console.ResetColor();
-                                choice = int.Parse(Console.ReadLine());
+                                updateChoice = int.Parse(Console.ReadLine());
                                 Console.WriteLine();
-                            } while (choice <= 0 || choice > updateActionStrings.Length);
+                            } while (updateChoice <= 0 || updateChoice > updateActionStrings.Length);
 
                             // user selects to update bounty info
-                            if (choice == 1)
+                            if (updateChoice == 1)
                             {
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.Write($"UPDATE {selectedPlayer.Name} BOUNTY AMOUNT:");
@@ -806,7 +806,7 @@ class Program
                                 }
                             }
                             // user selects to update target note info
-                            else if (choice == 2)
+                            else if (updateChoice == 2)
                             {
                                 validInput = false;
 
@@ -836,14 +836,14 @@ class Program
                                     {
                                         selectedPlayer.Notes = input.Trim();
                                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                                        Console.WriteLine();
                                         Console.WriteLine($"NOTE SAVED TO TARGET {selectedPlayer.Name}");
                                         Console.ResetColor();
+                                        Console.WriteLine();
                                         validInput = true;
                                     }
                                 } while (!validInput);
                             }
-                            else if (choice == 3)
+                            else if (updateChoice == 3)
                             {
                                 validInput = true;
                                 break;
@@ -857,6 +857,8 @@ class Program
                                 continue;
                             }
                         } while (validInput == false);
+
+                        break;
                     }
                     // user selects to remove target from list
                     else if (choice == 2)
