@@ -29,7 +29,9 @@ class Program
 
         while (isRunning == true)
         {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.Write("ENTER PLAYER NAME (or '/help' for help): ");
+            Console.ResetColor();
             string username = Console.ReadLine();
 
             program.GetUserInput(username, debugMode);
@@ -320,7 +322,9 @@ class Program
                 Console.WriteLine(s);
             }
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.Write("CHOOSE A LIST: ");
+            Console.ResetColor();
             listChoice = Console.ReadLine();
 
             if (listChoice == "1")
@@ -330,10 +334,12 @@ class Program
             }
             else if (listChoice == "2")
             {
+                Console.WriteLine();
                 TargetListInteraction();
             }
             else if (listChoice == "3")
             {
+                Console.WriteLine();
                 WhiteListInteraction();
             }
         }
@@ -358,7 +364,9 @@ class Program
                 }
 
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write("SELECT A PLAYER (or '/back' to return to previous menu): ");
+                Console.ResetColor();
                 input = Console.ReadLine();
 
                 if (input == "/back")
@@ -434,10 +442,23 @@ class Program
 
                 do
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.Write("CHOOSE ACTION: ");
-                    choice = int.Parse(Console.ReadLine());
+                    Console.ResetColor();
+                    try
+                    {
+                        choice = int.Parse(Console.ReadLine());
+                    }
+                    catch (FormatException)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("INVALID INTEGER");
+                        Console.ResetColor();
+                        choice = 0; // Reset choice
+                        continue; // Skip the rest of the loop and start over
+                    }
                     Console.WriteLine();
-                } 
+                }
                 while (choice <= 0 || choice > actionStrings.Length);
 
                 if (choice != 4)
@@ -445,20 +466,44 @@ class Program
                     // player added to target list
                     if (choice == 1)
                     {
-                        Console.Write("ADD BOUNTY? (Y/N)");
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.Write("ADD BOUNTY? (Y/N) ");
+                        Console.ResetColor();
                         do
                         {
                             input = Console.ReadLine();
                             input = input.ToLower();
                             if (input == "y")
                             {
-                                Console.Write("ENTER BOUNTY AMOUNT:");
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.Write("ENTER BOUNTY AMOUNT: ");
+                                Console.ResetColor();
                                 int bountyAmount;
                                 if (Int32.TryParse(Console.ReadLine(), out bountyAmount))
                                 {
-                                    selectedPlayer.Bounty = bountyAmount;
-                                    Console.WriteLine($"{selectedPlayer.Name} BOUNTY INCREASED TO {bountyAmount} aUEC");
-                                    validInput = true;
+                                    if (bountyAmount > selectedPlayer.Bounty)
+                                    {
+                                        selectedPlayer.Bounty = bountyAmount;
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"{selectedPlayer.Name} BOUNTY INCREASED TO {bountyAmount} aUEC");
+                                        Console.ResetColor();
+                                        validInput = true;
+                                    }
+                                    else if (bountyAmount < selectedPlayer.Bounty)
+                                    {
+                                        selectedPlayer.Bounty = bountyAmount;
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"{selectedPlayer.Name} BOUNTY REDUCED TO {bountyAmount} aUEC");
+                                        Console.ResetColor();
+                                        validInput = true;
+                                    }
+                                    else
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"NO CHANGES RECORDED TO {selectedPlayer.Name} BOUNTY");
+                                        Console.ResetColor();
+                                        validInput = true;
+                                    }
                                 }
                                 else
                                 {
@@ -491,7 +536,9 @@ class Program
                         validInput = false;
                         do
                         {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
                             Console.Write("REASON FOR WHITELIST: ");
+                            Console.ResetColor();
                             input = Console.ReadLine();
                             if (input.Length < 3)
                             {
@@ -570,7 +617,9 @@ class Program
                 }
 
                 Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkYellow;
                 Console.Write("SELECT A PLAYER (or '/back' to return to previous menu): ");
+                Console.ResetColor();
                 input = Console.ReadLine();
 
                 if (input == "/back")
@@ -647,18 +696,33 @@ class Program
 
                 do
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                     Console.Write("CHOOSE ACTION: ");
-                    choice = int.Parse(Console.ReadLine());
+                    Console.ResetColor();
+                    try
+                    {
+                        choice = int.Parse(Console.ReadLine());
+                    }
+                    catch (FormatException)
+                    {
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine("INVALID INTEGER");
+                        Console.ResetColor();
+                        Console.WriteLine();
+                        choice = 0; // Reset choice
+                        continue; // Skip the rest of the loop and start over
+                    }
                     Console.WriteLine();
                 }
                 while (choice <= 0 || choice > actionStrings.Length);
 
-                if (choice != 3)
+                // if user does not choose to go back
+                while (choice != 3)
                 {
-                    // Update Target Info
+                    // User chooses to update target info
                     if (choice == 1)
                     {
-                        // gets player choice re: info to update (bounty or notes)
+                        // gets user choice re: info to update (bounty or notes)
                         do
                         {
                             do
@@ -669,7 +733,9 @@ class Program
                                 }
 
                                 Console.WriteLine();
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.Write("ITEM TO UPDATE: ");
+                                Console.ResetColor();
                                 choice = int.Parse(Console.ReadLine());
                                 Console.WriteLine();
                             } while (choice <= 0 || choice > updateActionStrings.Length);
@@ -677,12 +743,16 @@ class Program
                             // user selects to update bounty info
                             if (choice == 1)
                             {
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.Write($"UPDATE {selectedPlayer.Name} BOUNTY AMOUNT:");
+                                Console.ResetColor();
                                 int bountyAmount;
                                 if (Int32.TryParse(Console.ReadLine(), out bountyAmount))
                                 {
                                     selectedPlayer.Bounty = bountyAmount;
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                                     Console.WriteLine($"{selectedPlayer.Name} BOUNTY UPDATED TO {bountyAmount} aUEC");
+                                    Console.ResetColor();
                                     validInput = true;
                                 }
                                 else
@@ -701,7 +771,9 @@ class Program
 
                                 do
                                 {
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
                                     Console.Write("ENTER TARGET NOTE: ");
+                                    Console.ResetColor();
                                     input = Console.ReadLine();
                                     if (input.Length < 3)
                                     {
@@ -736,6 +808,11 @@ class Program
                             }
                         } while (validInput == false);
                     }
+                    else if (choice == 2)
+                    {
+                        // remove player from target list
+
+                    }
                 }
             }
         }
@@ -766,21 +843,25 @@ class Program
     private static void PrintHelpInfo()
     {
         Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine("AVAILABLE COMMANDS:");
+        Console.ResetColor();
         Console.WriteLine("--------------------------");
+        Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine();
         Console.WriteLine("/list - interact with a variety of lists");
         Console.WriteLine("/about - build info");
         Console.WriteLine("/donate - buy me a coffee :)");
         Console.WriteLine("/exit - closes Intel-Citizen");
         Console.WriteLine();
+        Console.ResetColor();
         Console.WriteLine("--------------------------");
         Console.WriteLine();
     }
 
     private static void PrintAboutInfo()
     {
-        string ver = "v0.1.08";
+        string ver = "v0.1.09";
         Console.WriteLine();
         Console.WriteLine("Developed by Blaqkstar, 2023");
         Console.WriteLine($"Version: {ver}");
@@ -798,7 +879,7 @@ class Program
    
     static void PrintTitle()
     {
-        string ver = "v0.1.08";
+        string ver = "v0.1.09";
         string[] asciiArt = new string[]
         {
             "  _____       _       _         ___ _ _   _               ",
