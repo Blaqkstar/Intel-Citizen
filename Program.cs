@@ -33,6 +33,7 @@ class Program
             Console.Write("ENTER PLAYER NAME (or '/help' for help): ");
             Console.ResetColor();
             string username = Console.ReadLine();
+            username = username.Trim();
 
             program.GetUserInput(username, debugMode);
         }
@@ -342,6 +343,14 @@ class Program
                 Console.WriteLine();
                 WhiteListInteraction();
             }
+            else
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("INVALID CHOICE");
+                Console.ResetColor();
+                continue;
+            }
         }
         while (listChoice != "4");
 
@@ -521,6 +530,7 @@ class Program
                             else continue;
                         } while (validInput == false);
 
+                        // adds player to targetlist
                         targetList.Add(selectedPlayer);
                         selectedPlayer.IsOnTargetList = true;
                         Console.WriteLine();
@@ -618,9 +628,10 @@ class Program
 
                 Console.WriteLine();
                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.Write("SELECT A PLAYER (or '/back' to return to previous menu): ");
+                Console.Write("SELECT TARGET (or '/back' to return to previous menu): ");
                 Console.ResetColor();
                 input = Console.ReadLine();
+                input = input.Trim();
 
                 if (input == "/back")
                 {
@@ -753,11 +764,12 @@ class Program
                                     Console.ForegroundColor = ConsoleColor.DarkYellow;
                                     Console.WriteLine($"{selectedPlayer.Name} BOUNTY UPDATED TO {bountyAmount} aUEC");
                                     Console.ResetColor();
+                                    Console.WriteLine();
                                     validInput = true;
                                 }
                                 else
                                 {
-                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.ForegroundColor = ConsoleColor.DarkGray;
                                     Console.WriteLine("INVALID INTEGER");
                                     Console.ResetColor();
                                     Console.WriteLine();
@@ -804,14 +816,36 @@ class Program
                             }
                             else if (choice == 3)
                             {
+                                validInput = true;
                                 break;
+                            }
+                            else
+                            {
+                                Console.WriteLine();
+                                Console.ForegroundColor = ConsoleColor.DarkGray;
+                                Console.WriteLine("INVALID CHOICE");
+                                Console.ResetColor();
+                                continue;
                             }
                         } while (validInput == false);
                     }
                     else if (choice == 2)
                     {
                         // remove player from target list
-
+                        targetList.Remove(selectedPlayer);
+                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                        Console.WriteLine();
+                        Console.WriteLine($"REMOVED {selectedPlayer.Name} FROM TARGET LIST");
+                        Console.ResetColor();
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.WriteLine("INVALID CHOICE");
+                        Console.ResetColor();
+                        continue;
                     }
                 }
             }
