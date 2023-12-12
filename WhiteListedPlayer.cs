@@ -8,8 +8,8 @@ namespace SC_Player_Intel_App
 {
     public class WhiteListedPlayer: Player
     {
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
         public string ReasonForWhitelist { get; set; }
         public decimal Fee { get; set; }
     }
