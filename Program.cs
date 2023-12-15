@@ -1421,7 +1421,7 @@ class Program
 
     private static void PrintAboutInfo()
     {
-        string ver = "v0.2.0";
+        string ver = "v0.2.1";
         Console.WriteLine();
         Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine("Developed by Blaqkstar, 2023");
@@ -1444,7 +1444,7 @@ class Program
    
     static void PrintTitle()
     {
-        string ver = "v0.2.0";
+        string ver = "v0.2.1";
         string[] asciiArt = new string[]
         {
             "  _____       _       _         ___ _ _   _               ",
