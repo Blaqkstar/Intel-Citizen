@@ -332,8 +332,20 @@ class Program
             // user selects to view recent searches
             if (listChoice == "1")
             {
-                Console.WriteLine();
-                RecentlySearchedListInteraction();
+                // if no recent searches found
+                if (recentlySearched.Count < 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("NO RECENT SEARCHES");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+                else
+                {
+                    Console.WriteLine();
+                    RecentlySearchedListInteraction();
+                }
+                
             }
             else if (listChoice == "2")
             {
@@ -343,8 +355,8 @@ class Program
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine("TARGET LIST IS EMPTY");
-                    Console.WriteLine();
                     Console.ResetColor();
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -359,8 +371,8 @@ class Program
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine("WHITELIST IS EMPTY");
-                    Console.WriteLine();
                     Console.ResetColor();
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -376,8 +388,8 @@ class Program
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGray;
                     Console.WriteLine("TARGET LIST IS EMPTY");
-                    Console.WriteLine();
                     Console.ResetColor();
+                    Console.WriteLine();
                 }
                 else
                 {
