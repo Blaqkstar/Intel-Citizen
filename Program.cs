@@ -1326,7 +1326,7 @@ class Program
 
     private static void PrintAboutInfo()
     {
-        string ver = "v0.1.09";
+        string ver = "v0.2.0";
         Console.WriteLine();
         Console.ForegroundColor = ConsoleColor.DarkGray;
         Console.WriteLine("Developed by Blaqkstar, 2023");
@@ -1336,7 +1336,7 @@ class Program
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"What's new with {ver}?");
         Console.ResetColor();
-        Console.WriteLine("- Built out target list and implemented ability for user to add/remove targets to/from the list, add/modify target bounties, and add notes to target profiles");
+        Console.WriteLine("- Built out first iteration whitelist functionality");
         Console.WriteLine();
     }
 
@@ -1348,7 +1348,7 @@ class Program
    
     static void PrintTitle()
     {
-        string ver = "v0.1.09";
+        string ver = "v0.2.0";
         string[] asciiArt = new string[]
         {
             "  _____       _       _         ___ _ _   _               ",
