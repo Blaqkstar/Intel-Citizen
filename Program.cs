@@ -1223,7 +1223,7 @@ class Program
                                 {
                                     selectedPlayer.EndDate = selectedPlayer.StartDate.AddDays(duration);
                                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                                    Console.WriteLine($"{selectedPlayer.Name} WHITELIST START DATE UPDATED TO {selectedPlayer.EndDate}");
+                                    Console.WriteLine($"{selectedPlayer.Name} WHITELIST END DATE UPDATED TO {selectedPlayer.EndDate}");
                                     Console.ResetColor();
                                     Console.WriteLine();
                                     validInput = true;
