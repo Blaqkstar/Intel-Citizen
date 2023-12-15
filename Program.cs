@@ -501,11 +501,11 @@ class Program
                     // player added to target list
                     if (choice == 1)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.Write("ADD BOUNTY? (Y/N) ");
-                        Console.ResetColor();
                         do
                         {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.Write("ADD BOUNTY? (Y/N) ");
+                            Console.ResetColor();
                             input = Console.ReadLine();
                             input = input.ToLower();
                             if (input == "y")
@@ -573,6 +573,17 @@ class Program
                     {
                         WhiteListedPlayer whiteListedPlayer = new WhiteListedPlayer();
                         validInput = false;
+
+                        // copies attributes from selectedPlayer to WhitelistedPlayer
+                        whiteListedPlayer.Name = selectedPlayer.Name;
+                        whiteListedPlayer.EnlistedDate = selectedPlayer.EnlistedDate;
+                        whiteListedPlayer.URL = selectedPlayer.URL;
+                        whiteListedPlayer.OrgName = selectedPlayer.OrgName;
+                        whiteListedPlayer.OrgURL = selectedPlayer.OrgURL;
+                        whiteListedPlayer.Bio = selectedPlayer.Bio;
+                        whiteListedPlayer.Notes = selectedPlayer.Notes;
+
+                        // reason for whitelist
                         do
                         {
                             Console.ForegroundColor = ConsoleColor.DarkYellow;
@@ -600,26 +611,90 @@ class Program
                                 whiteListedPlayer.ReasonForWhitelist = input.Trim();
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.WriteLine();
-                                Console.WriteLine("SAVED");
+                                Console.WriteLine("WHITELIST REASON SAVED");
                                 Console.ResetColor();
+                                Console.WriteLine();
                                 validInput = true;
                             }
                         } while (!validInput);
 
-                        // copies attributes from selectedPlayer to WhitelistedPlayer
-                        whiteListedPlayer.Name = selectedPlayer.Name;
-                        whiteListedPlayer.EnlistedDate = selectedPlayer.EnlistedDate;
-                        whiteListedPlayer.URL = selectedPlayer.URL;
-                        whiteListedPlayer.OrgName = selectedPlayer.OrgName;
-                        whiteListedPlayer.OrgURL = selectedPlayer.OrgURL;
-                        whiteListedPlayer.Bio = selectedPlayer.Bio;
-                        whiteListedPlayer.Notes = selectedPlayer.Notes;
+                        validInput = false;
+                        // sets fee paid
+                        do
+                        {
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.Write("FEE PAID? (Y/N) ");
+                            Console.ResetColor();
+                            input = Console.ReadLine();
+                            input = input.ToLower();
+                            if (input == "y")
+                            {
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.Write("ENTER AMOUNT PAID: ");
+                                Console.ResetColor();
+                                int feePaid;
+                                if (Int32.TryParse(Console.ReadLine(), out feePaid))
+                                {
+                                    if (feePaid > whiteListedPlayer.Fee)
+                                    {
+                                        whiteListedPlayer.Fee = feePaid;
+                                        Console.WriteLine();
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"{whiteListedPlayer.Name} AMOUNT PAID INCREASED TO {feePaid} aUEC");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        validInput = true;
+                                    }
+                                    else if (feePaid < whiteListedPlayer.Fee)
+                                    {
+                                        whiteListedPlayer.Fee = feePaid;
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"{whiteListedPlayer.Name} AMOUNT PAID REDUCED TO {feePaid} aUEC");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        validInput = true;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine();
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"NO CHANGES RECORDED TO {whiteListedPlayer.Name} FEE");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        validInput = true;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine();
+                                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                                    Console.WriteLine("INVALID INTEGER");
+                                    Console.ResetColor();
+                                    Console.WriteLine();
+                                    continue;
+                                }
+                            }
+                            else if (input == "n")
+                            {
+                                whiteListedPlayer.Fee = 0;
+                                break;
+                            }
+                            else continue;
+                        } while (validInput == false);
+
+                        // whitelist start date defaults to the day user adds them to list
+                        whiteListedPlayer.StartDate = DateOnly.FromDateTime(DateTime.Now);
+                        // whitelist duration defaults to 30 days
+                        whiteListedPlayer.EndDate = whiteListedPlayer.StartDate.AddDays(30);
 
                         collections.WhiteList.Add(whiteListedPlayer);
                         Console.WriteLine();
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                         Console.WriteLine($"ADDED {whiteListedPlayer.Name} TO WHITELIST");
+                        Console.WriteLine();
                         Console.WriteLine($"REASON FOR WHITELIST: {whiteListedPlayer.ReasonForWhitelist}");
+                        Console.WriteLine($"WHITELIST START DATE: {whiteListedPlayer.StartDate}");
+                        Console.WriteLine($"WHITELIST END DATE: {whiteListedPlayer.EndDate}");
                         Console.ResetColor();
                         Console.WriteLine();
                     }
@@ -904,6 +979,7 @@ class Program
                 Console.Write("SELECT PLAYER (or '/back' to return to previous menu): ");
                 Console.ResetColor();
                 input = Console.ReadLine();
+                Console.WriteLine();
                 input = input.Trim();
 
                 if (input == "/back")
@@ -933,6 +1009,7 @@ class Program
                 {
                     Console.WriteLine($"REASON FOR WHITELIST: N/A");
                 }
+                Console.WriteLine();
                 if (selectedPlayer.StartDate != null)
                 {
                     Console.WriteLine($"WHITELIST START DATE: {selectedPlayer.StartDate}");
@@ -941,7 +1018,6 @@ class Program
                 {
                     Console.WriteLine($"WHITELIST START DATE: N/A");
                 }
-                Console.WriteLine();
                 if (selectedPlayer.EndDate != null)
                 {
                     Console.WriteLine($"WHITELIST END DATE: {selectedPlayer.EndDate}");
@@ -950,9 +1026,6 @@ class Program
                 {
                     Console.WriteLine($"WHITELIST END DATE: N/A");
                 }
-                
-                Console.WriteLine();
-                Console.WriteLine($"PROFILE URL: {selectedPlayer.URL}");
                 if (selectedPlayer.Fee != null)
                 {
                     Console.WriteLine($"FEE PAID: {selectedPlayer.Fee}");
@@ -1032,7 +1105,7 @@ class Program
                                 {
                                     validInput = false;
                                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                                    Console.Write($"UPDATE {selectedPlayer.Name} WHITELIST START DATE:");
+                                    Console.Write($"UPDATE {selectedPlayer.Name} WHITELIST START DATE (MM/DD/YYYY): ");
                                     Console.ResetColor();
                                     DateOnly startDate;
                                     if (DateOnly.TryParse(Console.ReadLine(), out startDate))
@@ -1047,27 +1120,27 @@ class Program
                                     else
                                     {
                                         Console.ForegroundColor = ConsoleColor.DarkGray;
-                                        Console.WriteLine("INVALID INTEGER");
+                                        Console.WriteLine("INVALID DATE FORMAT");
                                         Console.ResetColor();
                                         Console.WriteLine();
                                         continue;
                                     }
                                 } while (!validInput);
                             }
-                            // user selects to update target note info
+                            // user selects to update player whitelist duration
                             else if (updateChoice == 2)
                             {
                                 validInput = false;
 
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
-                                Console.Write($"UPDATE {selectedPlayer.Name} WHITELIST DURATION:");
+                                Console.Write($"UPDATE {selectedPlayer.Name} WHITELIST DURATION: ");
                                 Console.ResetColor();
-                                DateOnly endDate;
-                                if (DateOnly.TryParse(Console.ReadLine(), out endDate))
+                                int duration;
+                                if (int.TryParse(Console.ReadLine(), out duration))
                                 {
-                                    selectedPlayer.EndDate = endDate;
+                                    selectedPlayer.EndDate = selectedPlayer.StartDate.AddDays(duration);
                                     Console.ForegroundColor = ConsoleColor.DarkYellow;
-                                    Console.WriteLine($"{selectedPlayer.Name} WHITELIST START DATE UPDATED TO {endDate}");
+                                    Console.WriteLine($"{selectedPlayer.Name} WHITELIST START DATE UPDATED TO {selectedPlayer.EndDate}");
                                     Console.ResetColor();
                                     Console.WriteLine();
                                     validInput = true;
@@ -1075,13 +1148,100 @@ class Program
                                 else
                                 {
                                     Console.ForegroundColor = ConsoleColor.DarkGray;
+                                    Console.WriteLine("INVALID DURATION");
+                                    Console.ResetColor();
+                                    Console.WriteLine();
+                                    continue;
+                                }
+                            }
+                            // user selects to update whitelist reason
+                            else if (updateChoice == 3)
+                            {
+                                // reason for whitelist
+                                do
+                                {
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.Write("REASON FOR WHITELIST: ");
+                                    Console.ResetColor();
+                                    input = Console.ReadLine();
+                                    if (input.Length < 3)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                                        Console.WriteLine("WHITELIST REASON MUST BE AT LEAST 3 CHARACTERS LONG");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        continue;
+                                    }
+                                    else if (input.Length > 64)
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                                        Console.WriteLine("WHITELIST REASON CANNOT EXCEED 64 CHARACTERS");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        selectedPlayer.ReasonForWhitelist = input.Trim();
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine();
+                                        Console.WriteLine("WHITELIST REASON SAVED");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        validInput = true;
+                                    }
+                                } while (!validInput);
+                            }
+                            // user selects to update fee
+                            else if (updateChoice == 4)
+                            {
+                                Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                Console.Write("ENTER AMOUNT PAID: ");
+                                Console.ResetColor();
+                                int feePaid;
+                                if (Int32.TryParse(Console.ReadLine(), out feePaid))
+                                {
+                                    if (feePaid > selectedPlayer.Fee)
+                                    {
+                                        selectedPlayer.Fee = feePaid;
+                                        Console.WriteLine();
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"{selectedPlayer.Name} AMOUNT PAID INCREASED TO {feePaid} aUEC");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        validInput = true;
+                                    }
+                                    else if (feePaid < selectedPlayer.Fee)
+                                    {
+                                        selectedPlayer.Fee = feePaid;
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"{selectedPlayer.Name} AMOUNT PAID REDUCED TO {feePaid} aUEC");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        validInput = true;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine();
+                                        Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                        Console.WriteLine($"NO CHANGES RECORDED TO {selectedPlayer.Name} FEE");
+                                        Console.ResetColor();
+                                        Console.WriteLine();
+                                        validInput = true;
+                                    }
+                                }
+                                else
+                                {
+                                    Console.WriteLine();
+                                    Console.ForegroundColor = ConsoleColor.DarkGray;
                                     Console.WriteLine("INVALID INTEGER");
                                     Console.ResetColor();
                                     Console.WriteLine();
                                     continue;
                                 }
                             }
-                            else if (updateChoice == 3)
+                            // user selects to go back
+                            else if (updateChoice == 5)
                             {
                                 validInput = true;
                                 break;
@@ -1092,18 +1252,19 @@ class Program
                                 Console.ForegroundColor = ConsoleColor.DarkGray;
                                 Console.WriteLine("INVALID CHOICE");
                                 Console.ResetColor();
+                                Console.WriteLine();
                                 continue;
                             }
                         } while (validInput == false);
 
                         break;
                     }
-                    // user selects to remove target from list
+                    // user selects to remove player from list
                     else if (choice == 2)
                     {
-                        targetList.Remove(selectedPlayer);
+                        whiteList.Remove(selectedPlayer);
                         Console.ForegroundColor = ConsoleColor.DarkYellow;
-                        Console.WriteLine($"REMOVED {selectedPlayer.Name} FROM TARGET LIST");
+                        Console.WriteLine($"REMOVED {selectedPlayer.Name} FROM WHITELIST");
                         Console.ResetColor();
                         Console.WriteLine();
                         break;
@@ -1114,6 +1275,7 @@ class Program
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                         Console.WriteLine("INVALID CHOICE");
                         Console.ResetColor();
+                        Console.WriteLine();
                         continue;
                     }
                 }
