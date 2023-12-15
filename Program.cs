@@ -1,5 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
+using System.IO;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Http;
@@ -307,7 +309,7 @@ class Program
 
     private void PrintListMenu()
     {
-        string[] listOptions = new string[] { "[1] Recently Searched", "[2] Target List", "[3] Whitelist", "[4] Back" };
+        string[] listOptions = new string[] { "[1] Recently Searched", "[2] Target List", "[3] Whitelist", "[4] Export Lists", "[5] Back" };
         List<Player> recentlySearched = collections.SearchList;
         List<Player> targetList = collections.TargetList;
         List<WhiteListedPlayer> whiteList = collections.WhiteList;
@@ -326,7 +328,8 @@ class Program
             Console.Write("CHOOSE A LIST: ");
             Console.ResetColor();
             listChoice = Console.ReadLine();
-
+            Console.WriteLine();
+            // user selects to view recent searches
             if (listChoice == "1")
             {
                 Console.WriteLine();
@@ -365,9 +368,89 @@ class Program
                 }
                 
             }
+            // user selects to export lists
             else if (listChoice == "4")
             {
-                continue;
+                // if targetlist is empty
+                if (targetList.Count < 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("TARGET LIST IS EMPTY");
+                    Console.WriteLine();
+                    Console.ResetColor();
+                }
+                else
+                {
+                    // establishes date and time
+                    DateOnly date = DateOnly.FromDateTime(DateTime.Now);
+                    string dateString = date.ToString("yyyyMMdd"); // Formats the date as "yyyymmdd"
+
+                    //filepath
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string targetDirectory = Path.Combine(currentDirectory, "Lists", "Target List");
+                    Directory.CreateDirectory(targetDirectory); // Creates the directory if it doesn't exist
+
+                    string filePath = Path.Combine(targetDirectory, $"TargetList_{dateString}.csv");
+
+                    // list export
+                    using (StreamWriter writer = new StreamWriter(filePath))
+                    {
+                        writer.WriteLine($"TARGET LIST - {dateString}");
+                        writer.WriteLine("NAME,ENLISTED,URL,ORG NAME,ORG URL,BIO,BOUNTY,NOTES");
+                        foreach (Player target in targetList)
+                        {
+                            writer.WriteLine($"{target.Name},{target.EnlistedDate},{target.URL},{target.OrgName},{target.OrgURL},{target.Bio},{target.Bounty},{target.Notes}");
+                        }
+                    }
+                    // status output
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine("TARGET LIST EXPORTED SUCCESSFULLY");
+                    Console.WriteLine($"EXPORT LOCATION: {filePath}");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+                // if whitelist is empty
+                if (whiteList.Count < 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("WHITELIST IS EMPTY");
+                    Console.WriteLine();
+                    Console.ResetColor();
+                }
+                else
+                {
+                    // establishes date and time
+                    DateOnly date = DateOnly.FromDateTime(DateTime.Now);
+                    string dateString = date.ToString("yyyyMMdd"); // Formats the date as "yyyymmdd"
+
+                    //filepath
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string targetDirectory = Path.Combine(currentDirectory, "Lists", "Whitelist");
+                    Directory.CreateDirectory(targetDirectory); // Creates the directory if it doesn't exist
+
+                    string filePath = Path.Combine(targetDirectory, $"Whitelist_{dateString}.csv");
+
+                    // list export
+                    using (StreamWriter writer = new StreamWriter(filePath))
+                    {
+                        writer.WriteLine($"WHITELIST - {dateString}");
+                        writer.WriteLine("NAME,URL,ORG NAME,ORG URL,FEE,START DATE,END DATE,NOTES");
+                        foreach (WhiteListedPlayer player in whiteList)
+                        {
+                            writer.WriteLine($"{player.Name},{player.URL},{player.OrgName},{player.OrgURL},{player.Fee},{player.StartDate},{player.EndDate},{player.Notes}");
+                        }
+                    }
+                    // status output
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine("WHITELIST EXPORTED SUCCESSFULLY");
+                    Console.WriteLine($"EXPORT LOCATION: {filePath}");
+                    Console.ResetColor();
+                    Console.WriteLine();
+                }
+            }
+            else if (listChoice == "5")
+            {
+                break;
             }
             else
             {
@@ -378,7 +461,7 @@ class Program
                 Console.WriteLine();
             }
         }
-        while (listChoice != "4");
+        while (listChoice != "5");
 
         void RecentlySearchedListInteraction()
         {
