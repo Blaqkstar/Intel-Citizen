@@ -1419,7 +1419,8 @@ class Program
         Console.ForegroundColor = ConsoleColor.DarkYellow;
         Console.WriteLine($"What's new with {ver}?");
         Console.ResetColor();
-        Console.WriteLine("- Built out first iteration whitelist functionality");
+        Console.WriteLine("- Completed first iteration whitelist function");
+        Console.WriteLine("- Completed first iteration list csv export function");
         Console.WriteLine();
     }
 
